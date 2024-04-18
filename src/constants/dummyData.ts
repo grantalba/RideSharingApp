@@ -1,19 +1,18 @@
-export type RideDummyData = {
+import {getCurrentDateString} from 'utils/format';
+
+interface Location {
+  latitude: number;
+  longitude: number;
+  locationName?: string;
+}
+
+export interface RideRequestState {
   id: string; // Unique identifier for the ride
   userId: string; // ID of the user requesting the ride
   userFullName: string;
   driverId: string | null; // ID of the driver accepting the ride
-
-  pickupLocation: {
-    latitude: number; // Latitude of the pickup location
-    longitude: number; // Longitude of the pickup location
-    locationName: string;
-  };
-  destination: {
-    latitude: number; // Latitude of the destination
-    longitude: number; // Longitude of the destination
-    locationName: string;
-  };
+  pickupLocation: Location;
+  destination: Location;
   status:
     | 'pending'
     | 'accepted'
@@ -21,11 +20,11 @@ export type RideDummyData = {
     | 'started'
     | 'picked-up'
     | 'dropped-off'; // Status of the ride request
-  pickupTime: Date | null; // Time when the ride is scheduled for pickup
-  timestamp: Date; // Timestamp of when the ride request was made
-};
+  pickupTime: string | Date; // Time when the ride is scheduled for pickup
+  timestamp: string | Date; // Timestamp of when the ride request was made
+}
 
-export const rideDummyData: RideDummyData[] = [
+export const rideRequestState: RideRequestState[] = [
   {
     id: '1',
     userId: '1',
@@ -42,8 +41,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '2',
@@ -61,8 +60,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '3',
@@ -80,8 +79,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '4',
@@ -99,8 +98,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '5',
@@ -118,8 +117,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '6',
@@ -137,8 +136,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '7',
@@ -156,8 +155,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '8',
@@ -175,8 +174,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '9',
@@ -194,8 +193,8 @@ export const rideDummyData: RideDummyData[] = [
       locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
   {
     id: '10',
@@ -210,10 +209,10 @@ export const rideDummyData: RideDummyData[] = [
     destination: {
       latitude: 37.7368,
       longitude: -122.3728,
-      locationName: 'Palace of Fine Arts',
+      locationName: 'India Basin Shoreline Park',
     },
     status: 'pending',
-    pickupTime: null,
-    timestamp: new Date(),
+    pickupTime: getCurrentDateString(),
+    timestamp: getCurrentDateString(),
   },
 ];

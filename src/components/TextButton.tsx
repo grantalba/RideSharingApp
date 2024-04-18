@@ -31,7 +31,7 @@ const TextButton = ({
     },
     textLabelStyle: {
       color: COLORS.gray100,
-      ...FONTS.l2,
+      ...FONTS.l1,
       ...labelStyle,
     },
   });
