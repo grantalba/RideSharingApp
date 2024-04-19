@@ -77,7 +77,7 @@ export const SIZES = {
   radius: 12,
   padding: 24,
   margin: 20,
-  buttonBorderRadius: 30,
+  buttonBorderRadius: 22,
   smallAvatar: 40,
   mediumAvatar: 60,
   largeAvatar: 80,

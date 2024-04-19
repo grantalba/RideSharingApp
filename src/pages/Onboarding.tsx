@@ -1,13 +1,15 @@
 import React from 'react';
 import {Text, View, FlatList, Image, StyleSheet, Platform} from 'react-native';
+import {Path, Svg} from 'react-native-svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Container from '@components/Container';
 import {SIZES, COLORS, FONTS} from '@constants/theme';
 import constants, {OnboardingScreens} from '@constants/constants';
-import {Path, Svg} from 'react-native-svg';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TextButton from '@components/TextButton';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useAppDispatch} from '@utils/redux/hooks';
+import {addUser} from '@utils/redux/userSlice';
 
 const Onboarding = (): React.JSX.Element => {
   const insets = useSafeAreaInsets();
@@ -17,6 +19,7 @@ const Onboarding = (): React.JSX.Element => {
   const currentIndex = React.useRef<number>(0);
   const topFlatListRef = React.useRef<FlatList>(null);
   const bottomFlatListRef = React.useRef<FlatList>(null);
+  const dispatch = useAppDispatch();
 
   const handlePressButton = () => {
     if (currentIndex.current < constants.onboarding_screens.length - 1) {
@@ -38,6 +41,10 @@ const Onboarding = (): React.JSX.Element => {
         setIsLastPage(true);
       }
     } else {
+      // This is where we cache user => put in the Asyncstorage and Redux store so we can use it in the app
+      dispatch(
+        addUser({id: '1', userId: '1', userFullName: 'Niccolo Minguillan'}),
+      );
       navigation.navigate('Homescreen');
     }
   };
