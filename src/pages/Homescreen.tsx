@@ -5,6 +5,8 @@ import {
   Modal,
   Pressable,
   ActivityIndicator,
+  Text,
+  ScrollView,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -19,7 +21,8 @@ import Each from '@components/Each';
 import {useAppDispatch} from '@utils/redux/hooks';
 import {requestRide} from '@utils/redux/rideSlice';
 import TravelInformation from '@components/TravelInformation';
-import ProfileSection from 'components/ProfileSection';
+import SidneySurprised from '@assets/images/SidneySurprised.svg';
+import ProfileSection from '@components/ProfileSection';
 
 const Homescreen = (): React.JSX.Element => {
   const insets = useSafeAreaInsets();
@@ -27,9 +30,10 @@ const Homescreen = (): React.JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pressedMarker, setPressedMarker] =
     React.useState<RideRequestState | null>();
-  const [rideRequests, setRideRequests] = React.useState<
-    RideRequestState[] | []
-  >([]);
+  const [rideRequests, setRideRequests] = React.useState<RideRequestState[]>(
+    [],
+  );
+  const [showMap, setShowMap] = React.useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
@@ -45,20 +49,33 @@ const Homescreen = (): React.JSX.Element => {
     }
   };
 
+  const handlePressRetry = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setRideRequests(rideRequestState);
+    }, 3000);
+  };
+
   React.useEffect(() => {
     // Simulating a loading delay
     setTimeout(() => {
       setLoading(false);
-      setRideRequests(rideRequestState);
     }, 2000);
   }, []);
+
+  React.useEffect(() => {
+    if (rideRequests.length > 0) {
+      setShowMap(true);
+    }
+  }, [rideRequests]);
 
   const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
       flex: 1,
-      justifyContent: 'flex-end',
       alignItems: 'center',
+      justifyContent: 'center',
     },
     modalContainer: {
       flex: 1,
@@ -95,47 +112,79 @@ const Homescreen = (): React.JSX.Element => {
 
   return (
     <Container>
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.container}
-        zoomTapEnabled={false}
-        zoomEnabled={false}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.1, // Adjust the latitude delta for zoom level
-          longitudeDelta: 0.1, // Adjust the longitude delta for zoom level
-        }}>
-        <RenderWhen condition={!loading}>
-          <>
-            <Marker // Driver's current location
-              pinColor={COLORS.negative600}
-              coordinate={{latitude: 37.78825, longitude: -122.4324}}
-              title="Your current location"
-            />
-            <RenderWhen // Ride request locations
-              condition={rideRequests && rideRequests.length > 0}>
-              <Each
-                of={rideRequests}
-                render={(item: RideRequestState) => {
-                  const {latitude, longitude} = item?.pickupLocation;
-                  return (
-                    <Marker
-                      key={item.id}
-                      pinColor={COLORS.primary400}
-                      coordinate={{
-                        latitude,
-                        longitude,
-                      }}
-                      onPress={() => handleMarkerPress(item)}
-                    />
-                  );
-                }}
+      {showMap ? (
+        <MapView
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          style={styles.container}
+          zoomTapEnabled={false}
+          zoomEnabled={false}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.1, // Adjust the latitude delta for zoom level
+            longitudeDelta: 0.1, // Adjust the longitude delta for zoom level
+          }}>
+          <RenderWhen condition={!loading}>
+            <>
+              <Marker // Driver's current location
+                pinColor={COLORS.negative600}
+                coordinate={{latitude: 37.78825, longitude: -122.4324}}
+                title="Your current location"
               />
-            </RenderWhen>
-          </>
+              <RenderWhen // Ride request locations
+                condition={rideRequests && rideRequests.length > 0}>
+                <Each
+                  of={rideRequests}
+                  render={(item: RideRequestState) => {
+                    const {latitude, longitude} = item?.pickupLocation;
+                    return (
+                      <Marker
+                        key={item.id}
+                        pinColor={COLORS.primary400}
+                        coordinate={{
+                          latitude,
+                          longitude,
+                        }}
+                        onPress={() => handleMarkerPress(item)}
+                      />
+                    );
+                  }}
+                />
+              </RenderWhen>
+            </>
+          </RenderWhen>
+        </MapView>
+      ) : (
+        <RenderWhen condition={!loading}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'space-evenly',
+              height: '80%',
+              marginHorizontal: 20,
+            }}>
+            <SidneySurprised height={250} width={250} />
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 20,
+              }}>
+              <Text style={{...FONTS.h3, marginVertical: 20}}>Ooops!!</Text>
+              <Text style={{...FONTS.l1, marginTop: 10}}>
+                Something went wrong!
+              </Text>
+              <Text style={{...FONTS.l1}}>Please try again later.</Text>
+            </View>
+
+            <TextButton
+              label={'Click to Retry'}
+              contentContainerStyle={styles.textButton}
+              onPress={() => handlePressRetry()}
+            />
+          </View>
         </RenderWhen>
-      </MapView>
+      )}
 
       <RenderWhen condition={loading}>
         <View style={styles.loadingContainer}>
@@ -174,9 +223,7 @@ const Homescreen = (): React.JSX.Element => {
             <TextButton
               label={'More Information'}
               contentContainerStyle={styles.textButton}
-              onPress={() => {
-                handlePressButton();
-              }}
+              onPress={handlePressButton}
             />
           </View>
         </Pressable>

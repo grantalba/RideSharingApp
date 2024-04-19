@@ -1,24 +1,81 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker, Polyline} from 'react-native-maps';
 import Container from '@components/Container';
-import {useAppSelector} from '@utils/redux/hooks';
+import {useAppDispatch, useAppSelector} from '@utils/redux/hooks';
 import {FONTS, SIZES, COLORS} from '@constants/theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProfileSection from 'components/ProfileSection';
 import TravelInformation from 'components/TravelInformation';
 import TextButton from '@components/TextButton';
+import {acceptRide, declineRide} from 'utils/redux/rideSlice';
+import RenderWhen from 'components/RenderWhen';
 
 const RideRequestDetailsScreen = (): React.JSX.Element => {
-  const {pickupLocation, destination, userFullName, timestamp} = useAppSelector(
-    state => state.ride,
-  );
+  // const {pickupLocation, destination, userFullName} = useAppSelector(
+  //   state => state.ride,
+  // );
+
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const rideRequest = useAppSelector(state => state.ride);
+  const {pickupLocation, destination, userFullName} = rideRequest;
+
+  const {userFullName: riderFullName} = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
   // Calculate midpoint between pickup and dropoff coordinates
   const midPoint = {
     latitude: (pickupLocation.latitude + destination.latitude) / 2,
     longitude: (pickupLocation.longitude + destination.longitude) / 2,
   };
+
+  const handleAcceptOnPress = () => {
+    Alert.alert(
+      'Accept the ride?',
+      'Are you sure you want to accept the ride?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => dispatch(acceptRide(riderFullName))},
+      ],
+    );
+  };
+
+  const handleDeclineOnPress = () => {
+    Alert.alert(
+      'Decline the ride?',
+      'Are you sure you want to decline the ride?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => dispatch(declineRide())},
+      ],
+    );
+  };
+
+  React.useEffect(() => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    console.log(JSON.stringify(rideRequest, null, 2));
+  }, [rideRequest]);
 
   const styles = StyleSheet.create({
     content: {
@@ -67,9 +124,17 @@ const RideRequestDetailsScreen = (): React.JSX.Element => {
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'transparent',
-      borderColor: COLORS.negative300,
+      backgroundColor: loading ? COLORS.gray200 : 'transparent',
+      borderColor: loading ? COLORS.gray100 : COLORS.negative300,
       borderWidth: 1,
+    },
+    loadingContainer: {
+      ...StyleSheet.absoluteFillObject,
+      height: '100%',
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
     },
   });
 
@@ -113,6 +178,12 @@ const RideRequestDetailsScreen = (): React.JSX.Element => {
         />
       </MapView>
 
+      <RenderWhen condition={loading}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      </RenderWhen>
+
       <View style={styles.content}>
         <ProfileSection
           fullName={userFullName}
@@ -131,13 +202,15 @@ const RideRequestDetailsScreen = (): React.JSX.Element => {
         <TextButton
           label="Accept"
           contentContainerStyle={styles.acceptButton}
-          onPress={() => {}}
+          onPress={handleAcceptOnPress}
+          disabled={loading ? true : false}
         />
         <TextButton
           label="Decline"
           contentContainerStyle={styles.declineButton}
-          labelStyle={{color: COLORS.negative300}}
-          onPress={() => {}}
+          labelStyle={{color: loading ? COLORS.gray100 : COLORS.negative300}}
+          onPress={handleDeclineOnPress}
+          disabled={loading ? true : false}
         />
       </View>
     </Container>
