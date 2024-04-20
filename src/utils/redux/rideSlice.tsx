@@ -7,6 +7,7 @@ const initialState: RideRequestState = {
   userId: '',
   userFullName: '',
   driverId: null,
+  driverName: null,
   pickupLocation: {
     latitude: 0,
     longitude: 0,
@@ -29,13 +30,15 @@ const rideSlice = createSlice({
     requestRide(state, action: PayloadAction<RideRequestState>) {
       return {...state, ...action.payload};
     },
-    acceptRide(state, action: PayloadAction<string>) {
-      state.driverId = action.payload;
+    acceptRide(state, action) {
+      state.driverId = action.payload.driverId;
+      state.driverName = action.payload.driverName;
       state.pickupTime = getCurrentDateString();
       state.status = 'accepted';
     },
     declineRide(state) {
       state.driverId = null;
+      state.driverName = null;
       state.status = 'declined';
     },
     startRide(state) {

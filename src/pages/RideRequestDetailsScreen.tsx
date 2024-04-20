@@ -28,7 +28,9 @@ const RideRequestDetailsScreen = (): React.JSX.Element => {
   const rideRequest = useAppSelector(state => state.ride);
   const {pickupLocation, destination, userFullName} = rideRequest;
 
-  const {userFullName: riderFullName} = useAppSelector(state => state.user);
+  const {userFullName: driverFullName, userId} = useAppSelector(
+    state => state.user,
+  );
   const dispatch = useAppDispatch();
 
   // Calculate midpoint between pickup and dropoff coordinates
@@ -47,7 +49,13 @@ const RideRequestDetailsScreen = (): React.JSX.Element => {
           onPress: () => {},
           style: 'cancel',
         },
-        {text: 'Ok', onPress: () => dispatch(acceptRide(riderFullName))},
+        {
+          text: 'Ok',
+          onPress: () =>
+            dispatch(
+              acceptRide({driverId: userId, driverName: driverFullName}),
+            ),
+        },
       ],
     );
   };

@@ -11,6 +11,7 @@ export interface RideRequestState {
   userId: string; // ID of the user requesting the ride
   userFullName: string;
   driverId: string | null; // ID of the driver accepting the ride
+  driverName: string | null; // Name of the driver accepting the ride
   pickupLocation: Location;
   destination: Location;
   status:
@@ -30,6 +31,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '1',
     userFullName: 'Grant Alba',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.7544,
       longitude: -122.4477,
@@ -49,6 +51,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '2',
     userFullName: 'Katrina Cruz',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.7521,
       longitude: -122.4477,
@@ -68,6 +71,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '3',
     userFullName: 'Gyalu Cunanan',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.751,
       longitude: -122.4476,
@@ -87,6 +91,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '4',
     userFullName: 'John Doe',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.7596,
       longitude: -122.4269,
@@ -106,6 +111,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '5',
     userFullName: 'Jane Doe',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.7612,
       longitude: -122.4215,
@@ -124,6 +130,7 @@ export const rideRequestState: RideRequestState[] = [
     id: '6',
     userId: '6',
     driverId: '',
+    driverName: '',
     userFullName: 'Carlotta Tolibas',
     pickupLocation: {
       latitude: 37.752,
@@ -144,6 +151,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '7',
     userFullName: 'Ishan Villamar',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.8199,
       longitude: -122.4783,
@@ -163,6 +171,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '8',
     userFullName: 'Jaime Ruiz',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.808,
       longitude: -122.4177,
@@ -182,6 +191,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '9',
     userFullName: 'Moira Dela Torre',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.7879,
       longitude: -122.4075,
@@ -201,6 +211,7 @@ export const rideRequestState: RideRequestState[] = [
     userId: '10',
     userFullName: 'Selene Tan',
     driverId: '',
+    driverName: '',
     pickupLocation: {
       latitude: 37.802,
       longitude: -122.4485,
